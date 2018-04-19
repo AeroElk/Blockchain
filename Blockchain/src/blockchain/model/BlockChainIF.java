@@ -9,18 +9,8 @@ package blockchain.model;
  */
 public interface BlockChainIF
 {
-    /**
-     * initalise chain
-     * @param block
-     * @return 
-     */
-    public boolean initialiseChain(BlockIF block); 
+    public boolean initialiseChain(BlockIF block);
 
-    /**
-     * add block to blockchain
-     * @param data
-     * @return 
-     */
     public BlockChainIF addBlock(String data);
     
 }

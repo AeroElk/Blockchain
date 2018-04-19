@@ -36,7 +36,7 @@ public class BlockChain extends AbstractBlockChain
             {
                 // empty chain, generate genesis block
                 LOG.info("BlockChain empty -> inserting GenesisBlock");
-                BlockIF genesisBlock = getBlockIF().createNewGenesisBlock(); 
+                BlockIF genesisBlock = getBlockIF().getNewGenesisBlock(); 
                 if (genesisBlock != null)
                 {
                     getChain().add(genesisBlock);
@@ -52,7 +52,7 @@ public class BlockChain extends AbstractBlockChain
 
             // get hash of last block & add new
             byte [] hashPrev = getChain().get(size -1).getHash();
-            BlockIF b = getBlockIF().createNewBlock(data, hashPrev);
+            BlockIF b = getBlockIF().getNewBlock(data, hashPrev);
             getChain().add(b);
             LOG.log(Level.INFO, "added block # {0}", getChain().size());
         }

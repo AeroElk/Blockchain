@@ -4,7 +4,8 @@
 package blockchain.model;
 
 import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter; 
+import javax.xml.bind.DatatypeConverter;
+
 /**
  * @author 
  */
@@ -14,18 +15,17 @@ public abstract class AbstractBlock implements BlockIF
     protected byte[] data = null;             // stores acutal data
     protected byte[] prevHashBlock = null;    // hash of previous block
     protected byte[] hash = null;             // hash
-    protected long   nonce = 0; 
     
     private static final Logger LOG = Logger.getLogger(AbstractBlock.class.getName());            
       
     /**
-     * @see blockchain.model.BlockIF#createNewGenesisBlock() 
+     * @see blockchain.model.BlockIF#getNewGenesisBlock() 
      */
     @Override
-    public BlockIF createNewGenesisBlock() 
+    public BlockIF getNewGenesisBlock() 
     {
         LOG.info("creating new Genesis Block");
-	return createNewBlock("Genesis Block", new byte[0]);
+	return getNewBlock("Genesis Block", new byte[0]);
     }    
     
     /**
@@ -36,38 +36,7 @@ public abstract class AbstractBlock implements BlockIF
     {
         return this.hash;
     }
-
-    public void setHash(byte [] hash)
-    {
-        this.hash = hash; 
-    }
-
     
-    public long getNonce()
-    {
-        return this.nonce;
-    }
-    
-    public void setNonce(long nonce)
-    {
-        this.nonce = nonce;
-    }
-    
-    public String getData()
-    {
-        return new String(this.data);
-    }
-    
-    public String getPrevHashBlock()
-    {
-        return new String(this.prevHashBlock);
-    }
-    
-    public String getTimestamp()
-    {
-        return new Long(this.timestamp).toString();
-    }
-            
     
     /**
      * toString override 

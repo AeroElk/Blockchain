@@ -5,8 +5,13 @@ package blockchain.impl;
 
 import blockchain.model.AbstractBlock;
 import blockchain.model.BlockIF;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * @author 
@@ -23,15 +28,14 @@ public class Block extends AbstractBlock
      * @see blockchain.model.AbstractBlockIF#getNewBlock(java.lang.String, byte[]) 
      */
     @Override
-     public BlockIF createNewBlock(String data, byte [] prevBlockHash)
+     public BlockIF getNewBlock(String data, byte [] prevBlockHash)
     {
         Block b = new Block();
         b.timestamp = new Date().getTime();
         b.data = data.getBytes();
         b.prevHashBlock = prevBlockHash; 
-        b.nonce = 0;
         
-        if (!b.calculateHash())
+        if (!b.setHash())
         {
             LOG.info("hashing failed!");
             b = null; 
@@ -44,11 +48,27 @@ public class Block extends AbstractBlock
      * @return <code>true</code> if successful, <code>false</code> if something went wrong
      * @see blockchain.model.BlockIF#setHash() 
      */
-    public boolean calculateHash()
+    @Override
+    public boolean setHash()
     {
-        HashCash hc = new HashCash(this); 
-        hash = hc.mineHash();
-        return (hash != null);
+        // concatenate all fields
+        StringBuilder sb = new StringBuilder();
+        sb.append(timestamp);
+        sb.append(new String(data));
+        sb.append(new String(prevHashBlock));
+        
+        try
+        {
+            MessageDigest digest = MessageDigest.getInstance(getDigest());
+            hash = digest.digest(sb.toString().getBytes(StandardCharsets.UTF_8));
+            LOG.log(Level.INFO, "created hash: {0}", DatatypeConverter.printHexBinary(hash));
+            return true; 
+        }
+        catch (NoSuchAlgorithmException nsae)
+        {
+            LOG.log(Level.SEVERE, "Digest {0} unknown", getDigest());
+            return false; 
+        }
     }
     
     @Override

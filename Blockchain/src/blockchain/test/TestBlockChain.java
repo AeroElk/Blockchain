@@ -23,12 +23,15 @@ public class TestBlockChain
         
         BlockChain b =  new BlockChain();
         b.initialiseChain(new Block());
-       // HashCash hc = new HashCash(new Block());
         
         b.addBlock("bla");
         b.addBlock("blubb");
         b.addBlock("muh!");
-            
+        
         LOG.info(b.toString());
+        
+       
+
     }
+    
 }
