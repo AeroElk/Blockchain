@@ -7,7 +7,7 @@ package blockchain.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.Logger; 
 
 /**
  *
@@ -17,7 +17,7 @@ public abstract class AbstractBlockChain implements BlockChainIF
 {
     private BlockIF block; 
     
-    private final List<BlockIF> chain = new ArrayList();
+    private final List<BlockIF> chain = new ArrayList<BlockIF>();
     
     private static final Logger LOG = Logger.getLogger(AbstractBlockChain.class.getName());  
     

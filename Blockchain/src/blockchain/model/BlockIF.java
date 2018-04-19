@@ -8,14 +8,14 @@ package blockchain.model;
  */
 public interface BlockIF
 {
-    static final String BLOCK_DIGEST_SHA_256 = "SHA-256";
+    static final String BLOCK_DIGEST_SHA_256 = "SHA-256"; 
     
     /**
      * creates new Genesis Block, called from within a new Blockchain
      *
      * @return
      */
-    public BlockIF getNewGenesisBlock();
+    public BlockIF createNewGenesisBlock();
     
     /**
      * creates new Block
@@ -24,7 +24,7 @@ public interface BlockIF
      * @param prevBlockHash
      * @return 
      */
-    public BlockIF getNewBlock(String data, byte [] prevBlockHash);
+    public BlockIF createNewBlock(String data, byte [] prevBlockHash);
     
     
     /**
@@ -32,7 +32,7 @@ public interface BlockIF
      * 
      * @return 
      */
-    public boolean setHash();
+    public void setHash(byte [] hash);
     
     /**
      * gets hash if Block 
@@ -46,6 +46,35 @@ public interface BlockIF
      * @return 
      */
     public String getDigest();
+    
+    /**
+     * returns the current nonce
+     * @return 
+     */
+    public long getNonce();
 
+    /**
+     * sets the nonce
+     * @param nonce 
+     */
+    public void setNonce(long nonce);
+
+    /**
+     * returns data partition of block in string representation
+     * @return 
+     */
+    public String getData();
+    
+    /**
+     * previous hash block
+     * @return 
+     */
+    public String getPrevHashBlock();
+    
+    /**
+     * internal timestamp of block
+     * @return 
+     */
+    public String getTimestamp();
     
 }
