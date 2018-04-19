@@ -15,7 +15,7 @@ public interface BlockIF
      *
      * @return
      */
-    public BlockIF getNewGenesisBlock();
+    public BlockIF createNewGenesisBlock();
     
     /**
      * creates new Block
@@ -24,7 +24,7 @@ public interface BlockIF
      * @param prevBlockHash
      * @return 
      */
-    public BlockIF getNewBlock(String data, byte [] prevBlockHash);
+    public BlockIF createNewBlock(String data, byte [] prevBlockHash);
     
     
     /**
@@ -32,7 +32,7 @@ public interface BlockIF
      * 
      * @return 
      */
-    public boolean setHash();
+    public void setHash(byte [] hash);
     
     /**
      * gets hash if Block 
@@ -46,6 +46,15 @@ public interface BlockIF
      * @return 
      */
     public String getDigest();
-
+    
+    public String getData();
+   
+    public String getTimestamp();
+    
+    public String getPrevHashBlock();
+    
+    public long getNonce();
+    
+    public void setNonce(long nonce);
     
 }
