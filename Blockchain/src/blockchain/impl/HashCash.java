@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
@@ -24,41 +25,29 @@ public class HashCash implements ProofOfWorkIF
     private static final Logger LOG = Logger.getLogger(HashCash.class.getName());      
 
     protected static final BigInteger ZERO = new BigInteger("0"); 
-    protected static final int TARGET_BITS = 5; 
-    private final BlockIF block;
-    
-            
-    public HashCash(BlockIF block)
-    {
-        this.block = block; 
-    }
+
     
     @Override
-    public byte[] mineHash()
+    public byte[] mineHash(final BlockIF block, final int targetBits)
     {
-        byte[] hash = null; 
+        // prepare target
         BigInteger target = new BigInteger("1"); 
-        target = target.shiftLeft(MAX_BITS - TARGET_BITS);        
+        target = target.shiftLeft(MAX_BITS - targetBits);        
         LOG.log(Level.INFO, "target: {0}", target.toString(10));
         
-        MessageDigest digest; 
-        try
-        {
-            digest = MessageDigest.getInstance(block.getDigest());
-        }
-        catch (NoSuchAlgorithmException nsae)
-        {
-            LOG.log(Level.SEVERE, "Digest {0} unknown", block.getDigest());
-            return null; 
-        }
+        // get message digest 
+        MessageDigest digest = getMessageDigest(block);
+        if (digest == null) return null; 
         
+        // prepare data
         StringBuilder base = new StringBuilder();
         base.append(block.getTimestamp());
         base.append(block.getData());
         base.append(block.getPrevHashBlock());
-        
+
+        // start mining 
         LOG.log(Level.INFO, "mining for target{0}", block.getNonce() < MAX_NONCE);
-        
+        byte[] hash = null; 
         for ( ; block.getNonce() < MAX_NONCE; )
         {
             String toHash = base.toString() + block.getNonce();
@@ -83,5 +72,48 @@ public class HashCash implements ProofOfWorkIF
             }
         }
     return hash;
+    }
+    
+    public boolean verifyHash(final BlockIF block)
+    {
+        // get message digest 
+        MessageDigest digest = getMessageDigest(block);
+        if (digest == null) return false; 
+        
+        // prepare data
+        StringBuilder base = new StringBuilder();
+        base.append(block.getTimestamp());
+        base.append(block.getData());
+        base.append(block.getPrevHashBlock());
+        base.append(block.getNonce());
+        
+        byte [] verify = digest.digest(base.toString().getBytes(StandardCharsets.UTF_8));
+        LOG.log(Level.INFO, "created verify hash: {0}", DatatypeConverter.printHexBinary(verify));
+        boolean equals = Arrays.equals(block.getHash(), verify);
+        if (equals)
+        {
+            LOG.log(Level.INFO, "hash verified");
+        }
+        else
+        {
+            LOG.log(Level.INFO, "hash not verified");
+        }
+        
+        return equals; 
+    }
+    
+    private MessageDigest getMessageDigest(BlockIF block)
+    {
+        MessageDigest md = null; 
+        try
+        {
+            md = MessageDigest.getInstance(block.getDigest());
+        }
+        catch (NoSuchAlgorithmException nsae)
+        {
+            LOG.log(Level.SEVERE, "Digest {0} unknown", block.getDigest());
+        }
+        return md; 
+
     }
 }

@@ -57,4 +57,6 @@ public interface BlockIF
     
     public void setNonce(long nonce);
     
+    public boolean isValid();
+    
 }

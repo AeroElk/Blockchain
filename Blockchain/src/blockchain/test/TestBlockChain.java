@@ -5,6 +5,7 @@ package blockchain.test;
 
 import blockchain.impl.Block;
 import blockchain.impl.BlockChain;
+import blockchain.model.BlockIF;
 import java.util.logging.Logger;
 
 /**
@@ -29,6 +30,11 @@ public class TestBlockChain
         b.addBlock("muh!");
         
         LOG.info(b.toString());
+        
+        for (BlockIF block : b.getChain())
+        {
+            block.isValid();
+        }
         
        
 

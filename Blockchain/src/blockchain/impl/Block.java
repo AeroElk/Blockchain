@@ -15,6 +15,7 @@ public class Block extends AbstractBlock
 {
     
     private static final Logger LOG = Logger.getLogger(Block.class.getName());            
+    private static final int TARGET_BITS = 5; 
     
     /**
      * @param data data to be stored in block
@@ -46,8 +47,8 @@ public class Block extends AbstractBlock
      */
     public boolean calculateHash()
     {
-        HashCash hc = new HashCash(this); 
-        hash = hc.mineHash();
+        HashCash hc = new HashCash();
+        hash = hc.mineHash(this, TARGET_BITS); 
         return (hash != null);
     }
     
@@ -57,6 +58,10 @@ public class Block extends AbstractBlock
         return BlockIF.BLOCK_DIGEST_SHA_256; 
     }
     
-    
+    public boolean isValid()
+    {
+        HashCash hc = new HashCash();
+        return hc.verifyHash(this);
+    }
     
 }
